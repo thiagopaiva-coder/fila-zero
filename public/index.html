@@ -505,12 +505,15 @@ $("startBtn").onclick=start;$("tutNext").onclick=()=>tutStep<2?showTut(tutStep+1
 $("player").addEventListener("keydown",e=>{if(e.key==="Enter")necsoMode()});
 $("necsoBtn").onclick=necsoMode;$("againBtn").onclick=play;
 $("fsBtn").onclick=()=>{const d=document.documentElement;(d.requestFullscreen?d.requestFullscreen():Promise.reject()).catch(()=>{})};
-// QR embutido (sem internet, sem biblioteca). No servidor próprio, troque QR_DATA pelo QR do seu endereço (make qr).
-const QR_DATA="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUAQAAAABdRz15AAABOElEQVR42s2WsY1dMQwEh8blqw7cf1mvg1UF4+DBMHAO+QFbkaiAoHZHFEe+r/uDv9e/O5uZw5x7Zu4b7PJFuYGmOdFdfRgSYhQNSfcapDycnr1+X6+lk4uTj3hkoU+c8gabfONA/rAHeXb1qaWU5/IGW3+JaWje/dbf+sBpD7eUs+ePpFStwT1/FnrmwrnZvo9qYogJrbv6MKlJa9SULPNRY1tMSrutD1IJppIueRkPneZCzi0/4Vn6QZqWkMpev5hUm5Cy5Q+Vmhobuu2n2JhiTN8evfVXxBJ/47jUrwB5ry1r/kLMCzOlaz9SqLU1sNdPNa192Vn3q5k5hcEMZ/u/YfRFGYgf6PdzuEDa3KHnA/85eegpeO5H5hcpoeLS3y+Q4y1yj066vO8dcngY03PLdt74v+fdX7IyCO34hNaiAAAAAElFTkSuQmCC";
+// QR embutido do link público (GitHub Pages). Sem internet e sem biblioteca.
+const QR_DATA="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUAQAAAABdRz15AAABN0lEQVR42s2WMW4cQQwEi4Lymh/o/8/SD3pe0A72DAF2yAPsSRazQYHTTTY45c9zP/j7/Lt/M3PuHWbOZWbOkmcLZFK+nsuG9wkjJ+SQA+OaB/CVMadnrd+Ld284uTlv4JWD3qe6svNjOuBP74HfGx5tW2raYNtmxxNMA62Ca55EVaRElzxa20Y1yra+0KbSomVfn0rakiZkx/tE+OaAnXh6d/1MbbWxSWPW+pVUW6F5Q79EwJhUYrd+vKwQHju2vKYkhUfG9XsxFcWW7PvPBEssGNZ5QOwzIknN2g+JFiwlZJ8vrwh88m+p3wdw5tzhInfO93be2taq4fVd+gH25YdvyD/7e87AsuQ9+4Hk5MQZ8o4d6XLvydeheN6wH8jpnciE3L1+zwBD3OcfILFBSJfzMf/5vvsLZiAOFTxc+rMAAAAASUVORK5CYII=";
 document.querySelectorAll(".qrslot").forEach(el=>{const i=new Image();i.src=QR_DATA;i.alt="QR code do jogo";el.appendChild(i)});
-// Hospedado em endereço próprio: o QR passa a apontar pra esse endereço (gera no navegador; se falhar, fica o embutido).
-if(API&&!/claude\.ai$/.test(location.hostname)){const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
-  sc.onload=()=>{try{document.querySelectorAll(".qrslot").forEach(el=>{el.innerHTML="";new QRCode(el,{text:location.origin+location.pathname,width:132,height:132,colorDark:"#01355c",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M})})}catch(e){}};document.head.appendChild(sc)}
+// Em servidor próprio: o QR aponta pra PUBLIC_URL (definida no .env), ou pro link público se o endereço for local.
+const PUBLIC_URL="https://thiagopaiva-coder.github.io/fila-zero/";
+const isLocal=/^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|0\.0\.0\.0|\[::1\])/.test(location.hostname);
+function drawQr(text){const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+  sc.onload=()=>{try{document.querySelectorAll(".qrslot").forEach(el=>{el.innerHTML="";new QRCode(el,{text,width:132,height:132,colorDark:"#01355c",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M})})}catch(e){}};document.head.appendChild(sc)}
+if(API){fetch(api("/api/config")).then(r=>r.json()).then(c=>{const t=c.publicUrl||(isLocal?PUBLIC_URL:location.origin+location.pathname);if(t!==PUBLIC_URL)drawQr(t)}).catch(()=>{if(!isLocal)drawQr(location.origin+location.pathname)})}
 // Quantos clientes cabem na tela: acima disso, o mais antigo desiste
 function queueCap(){const h=$("queue").clientHeight;return Math.max(3,Math.min(7,Math.floor(h/150)))}
 drawRank();syncRank();setInterval(syncRank,15000);attract();

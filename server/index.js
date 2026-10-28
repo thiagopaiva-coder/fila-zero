@@ -15,7 +15,8 @@ const NECSO_TICKET = process.env.NECSO_OPEN_TICKET === "1";        // opcional: 
 // --- Webhook genérico (alternativa) ---
 const WEBHOOK = process.env.LEADS_WEBHOOK_URL || "";
 const WEBHOOK_TOKEN = process.env.LEADS_WEBHOOK_TOKEN || "";
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "";            // protege /api/leads.csv e /api/reset (?token=)
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "";
+const PUBLIC_URL = process.env.PUBLIC_URL || "";                // endereço que o QR "Jogue no seu celular" mostra (ex.: http://192.168.0.10:8080)            // protege /api/leads.csv e /api/reset (?token=)
 fs.mkdirSync(DATA, { recursive: true });
 const file = n => path.join(DATA, n + ".json");
 const load = n => { try { return JSON.parse(fs.readFileSync(file(n), "utf8")); } catch { return []; } };
@@ -131,6 +132,7 @@ http.createServer(async (req, res) => {
     if (!admin) return json(res, 401, { erro: "token" });
     try { funnelCache = null; return json(res, 200, await funnelStage()); } catch (e) { return json(res, 500, { erro: e.message }); }
   }
+  if (url.pathname === "/api/config") return json(res, 200, { publicUrl: PUBLIC_URL });
   if (url.pathname === "/health") return json(res, 200, { ok: true, necso: !!(NECSO_ID && NECSO_SECRET), webhook: !!WEBHOOK });
 
   const f = path.join(PUB, url.pathname === "/" ? "index.html" : url.pathname);

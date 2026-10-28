@@ -36,6 +36,6 @@ Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12)
 - Mensagens dos clientes e respostas: array `MSGS` (texto, [3 opções], índice da correta).
 - Nomes dos clientes: `CLIENTS`. Valores em jogo: `TICKETS`.
 - Dificuldade: `spawnEvery` (intervalo inicial, ms), fator `0.9` de aceleração, `patience` (ms).
-- QR: constante `QR_DATA` no index.html (data URI). Pra apontar pro seu servidor: `make qr URL=http://IP:8080` imprime o novo data URI.
+- QR "Jogue no seu celular": embutido (`QR_DATA`) aponta pro GitHub Pages. Em servidor próprio, `GET /api/config` devolve `PUBLIC_URL` do `.env` e o front redesenha o QR; endereço local sem PUBLIC_URL → mantém o link público.
 - Frases do modo atração: `HOOKS`. Fórmula da calculadora: `calc()` (contatos × 22 dias × % sem resposta × 10% conversão × ticket).
 - Duração do modo NECSO: `setTimeout(endScreen, 11000)`.
