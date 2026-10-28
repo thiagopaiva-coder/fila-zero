@@ -321,6 +321,7 @@ input{font:inherit}
             <div class="field"><label for="cMiss">% que fica sem resposta rápida</label><input id="cMiss" type="range" min="5" max="60" step="5" value="25"><span class="val" id="cMissV">25%</span></div>
             <div class="calcOut" style="margin:10px 0"><span>oportunidade perdida por mês, estimada</span><b id="calcTotal">R$ 0</b><span>se 1 em cada 10 contatos sem resposta fosse uma venda</span></div>
             <p>Quer esse cálculo detalhado pra sua operação? Diagnóstico gratuito, sem compromisso.</p>
+            <div class="field"><label for="leadName">Seu nome</label><input id="leadName" placeholder="Nome e sobrenome" autocomplete="off" maxlength="40"></div>
             <div class="field"><label for="leadCompany">Empresa</label><input id="leadCompany" placeholder="Nome da empresa" autocomplete="off"></div>
             <div class="field"><label for="leadPhone">WhatsApp</label><input id="leadPhone" placeholder="(12) 9 0000-0000" inputmode="tel" autocomplete="off"></div>
             <div class="row" style="margin-top:10px">
@@ -502,7 +503,7 @@ document.addEventListener("pointerdown",()=>{if(!$("deadOv").hidden||!$("endOv")
 function calc(){const d=+$("cDay").value,t=+$("cTicket").value,m=+$("cMiss").value;$("cDayV").textContent=d;$("cTicketV").textContent=fmt(t);$("cMissV").textContent=m+"%";
   const lost=d*22*(m/100)*0.1*t;$("calcTotal").textContent=fmt(lost);return lost}
 ["cDay","cTicket","cMiss"].forEach(id=>$(id).addEventListener("input",calc));
-$("calcBtn").onclick=()=>{$("endA").hidden=true;$("endB").hidden=false;calc()};
+$("calcBtn").onclick=()=>{$("endA").hidden=true;$("endB").hidden=false;if(!$("leadName").value&&S.player&&S.player!=="Visitante")$("leadName").value=S.player;calc();$("leadName").focus()};
 $("backBtn").onclick=()=>{$("endB").hidden=true;$("endA").hidden=false};
 
 // ---------- Ranking & leads ----------
@@ -519,12 +520,12 @@ function saveRank(){const r=getRank();r.push({name:S.player,score:S.score,served
   if(API)fetch(api("/api/rank"),{method:"POST",headers:HDR,body:JSON.stringify({name:S.player,score:S.score,served:S.served})}).then(r=>r.json()).then(r=>{LS("fz_rank",r);drawRank()}).catch(()=>{})}
 function drawRank(){const r=getRank();const h=r.length?r.map((x,i)=>`<div><span>${i+1}º ${x.name}</span><b>${x.score}</b></div>`).join(""):"<div><span>Seja o primeiro</span><b>—</b></div>";$("rank").innerHTML=h;$("mrank").innerHTML=r.slice(0,5).map((x,i)=>`<div><span>${i+1}º ${x.name}</span><b>${x.score}</b></div>`).join("")}
 function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2500)}
-$("leadBtn").onclick=()=>{const co=$("leadCompany").value.trim(),ph=$("leadPhone").value.trim();if(!ph){$("leadPhone").focus();return}
+$("leadBtn").onclick=()=>{const nm=$("leadName").value.trim(),co=$("leadCompany").value.trim(),ph=$("leadPhone").value.trim();if(!nm){$("leadName").focus();return}if(!co){$("leadCompany").focus();return}if(!ph){$("leadPhone").focus();return}S.player=nm.slice(0,18);
   const lead={name:S.player,company:co,phone:ph,score:S.score,lost:S.money,estimate:Math.round(calc()),at:new Date().toISOString()};const l=LS("fz_leads")||[];l.push(lead);LS("fz_leads",l);
   if(API)fetch(api("/api/leads"),{method:"POST",headers:HDR,body:JSON.stringify(lead)}).catch(()=>{});
   const msg=`Olá! Joguei o Fila Zero no estande da NECSObr na CONSTRUVALE e quero o diagnóstico gratuito.${co?" Empresa: "+co+".":""} No jogo perdi ${fmt(S.money)}; a estimativa da minha empresa deu ${fmt(lead.estimate)}/mês.`;
   $("waLink").href="https://wa.me/551220180667?text="+encodeURIComponent(msg);
-  $("leadCompany").value="";$("leadPhone").value="";$("endB").hidden=true;$("endC").hidden=false;idle(90000)};
+  $("leadName").value="";$("leadCompany").value="";$("leadPhone").value="";$("endB").hidden=true;$("endC").hidden=false;idle(90000)};
 $("doneBtn").onclick=attract;
 $("exportBtn").onclick=()=>{if(API){location.href=api("/api/leads.csv");return}const l=LS("fz_leads")||[];const csv="nome;empresa;whatsapp;pontos;perdido;estimativa;data\n"+l.map(x=>[x.name,x.company,x.phone,x.score,x.lost,x.estimate||"",x.at].join(";")).join("\n");
   navigator.clipboard.writeText(csv).then(()=>toast(`${l.length} lead(s) copiados`)).catch(()=>{const ta=document.createElement("textarea");ta.value=csv;document.body.appendChild(ta);ta.select();toast("Selecione e copie");setTimeout(()=>ta.remove(),4000)})};
