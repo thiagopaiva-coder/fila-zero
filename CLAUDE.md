@@ -22,7 +22,7 @@ e deixa o contato para o diagnóstico gratuito.
 ## Marca (manual NECSObr 2026)
 Azul cobalto #004aad, azul vívido #017de5, azul escuro #01355c.
 Fontes: Hammersmith One (necsobr) e Barlow Semi Condensed (corpo; o slogan oficial usa Cocomat Pro, não disponível no Google Fonts).
-Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12) 3204-4300.
+Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12) 3204-4300 (telefone). WhatsApp conectado ao NECSO Atende: (12) 2018-0667 (usado no link/QR pós-lead).
 
 ## Fluxo no estande
 1. **Modo atração** (ninguém jogando): fila roda sozinha, frases de impacto alternam (`HOOKS`), botão "TOQUE PARA ATENDER".
