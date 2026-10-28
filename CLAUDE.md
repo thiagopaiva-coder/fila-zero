@@ -28,7 +28,7 @@ Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12)
 1. **Modo atração** (ninguém jogando): fila roda sozinha, frases de impacto alternam (`HOOKS`), botão "TOQUE PARA ATENDER".
 2. **Tutorial** (`#tutOv`, 3 passos com bolhas de exemplo): como responder, barra de paciência, 3 vidas. "Pular" vai direto; "Jogar de novo" não repete o tutorial.
 3. **Jogo** até perder 3 clientes.
-4. **"A fila venceu"**: pede o nome (só aqui, pra não travar quem está passando) → "Ligar NECSO Atende".
+4. **"A fila venceu"**: pede o nome (só aqui, pra não travar quem está passando) → "Ligar NECSO Atende" → transição animada `#switchOv` (~4 s: símbolo pulsando, canais conectando, "Nenhum cliente sem resposta.") → modo automático com as respostas certas em bolhas azuis (14 s).
 5. **Resultado**: "Jogar de novo" (público geral) ou "Quanto a minha empresa perde?" (interessados) → calculadora de 3 sliders → lead → tela com botão/QR do WhatsApp da NECSObr (mensagem pronta com os números do jogo).
 6. Sem interação por 90 s nas telas finais → volta ao modo atração.
 
