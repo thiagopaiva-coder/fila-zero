@@ -28,3 +28,10 @@ qr:         ## gera QR do seu endereço: make qr URL=http://192.168.0.10:8080
 
 resend:     ## reenvia pra plataforma os leads que falharam
 	curl -s -X POST "http://localhost:8080/api/resend?token=$(ADMIN_TOKEN)"
+
+test-lead:  ## envia um lead de teste pra integração (use seu próprio WhatsApp em PHONE=)
+	curl -s -X POST http://localhost:8080/api/leads -H 'Content-Type: application/json' \
+	  -d '{"name":"Teste Fila Zero","company":"NECSObr","phone":"$(PHONE)","score":1200,"lost":8000,"estimate":24750}'
+
+crm:        ## mostra o funil e a etapa que o servidor vai usar
+	curl -s "http://localhost:8080/api/crm?token=$(ADMIN_TOKEN)"

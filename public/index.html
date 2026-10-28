@@ -68,6 +68,10 @@ input{font:inherit}
 .qr .qrimg{width:96px;height:96px}
 .attract .qrside{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:14px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .attract .qrside .qrimg{width:132px;height:132px}
+.wa{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.walink{display:inline-block;text-decoration:none}
+.waqr{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.waqr .qrimg{width:132px;height:132px}
 .attract .wrap{display:flex;gap:28px;align-items:center;justify-content:center;flex-wrap:wrap}
 .attract .wrap>div:first-child{display:flex;flex-direction:column;gap:12px;align-items:center;flex:1;min-width:0}
 .mrank{display:none;text-align:left;font-size:15px;margin-top:10px}
@@ -190,6 +194,7 @@ input{font:inherit}
   .cta{font-size:20px;padding:14px 20px}.cta.big{font-size:24px;padding:16px 24px}
   .attract .hook{font-size:26px}
   .attract .qrside{display:none}
+  .waqr{display:none}
   .kpis{grid-template-columns:1fr 1fr}.kpi b{font-size:26px}.kpi:first-child{grid-column:1/3}
   .tut .demo{max-width:100%}
   .mrank{display:block}
@@ -301,6 +306,16 @@ input{font:inherit}
               <button class="cta" id="leadBtn" type="button">Quero o diagnóstico</button>
               <button class="ghost" id="backBtn" type="button">Voltar</button>
             </div>
+          </div>
+          <div id="endC" hidden>
+            <h2>Recebido! Fala com a gente agora?</h2>
+            <p class="lead">Abra o WhatsApp da NECSObr com a mensagem pronta. A conversa já entra no nosso NECSO Atende.</p>
+            <div class="wa">
+              <a class="cta walink" id="waLink" href="#" target="_blank" rel="noopener">Abrir WhatsApp da NECSObr</a>
+              <div class="qrside waqr"><div class="qrimg"><img alt="QR do WhatsApp da NECSObr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOQAAADkAQAAAACgLLUgAAACdUlEQVR42uWZMZLlRgxD0VubP91g7n+sucHrE8ABNRvZzvirXFYkfQUQmwQI8p/mn6/7K/92/TffnnOem/s8Ofc+5zn35jw55zyLuCktBQw0tQTnZ1dxA8RSIk0ULGET9/eLfo+nibc3T/z6VPZpOOec53wFn7iMO4nEJloanOwu5/f0JPwddxO+N+Nt26SCoUnV0LZdruegWmgSarRN2MVtlLYSlNi80Lv8LSKkWrUFWtiO1yJNA8a8klXrcn4BZRDTtmlFsnvOabW0TLKR8oH8ImlM1TnuoMD2OZuaOpGWWoNmOd4kiA5eY7FJSJdxsUpJImntz3cs62SopTZVgen+y/xNq3FaUauVqbL1eBUbDUbApLv1/Ds5mNyc5jaXeJP0hme3DwaQUkLaQhpMtvtRNGmb0gZsHK1crSsSsEb/fEf3+Qs0aUmgQWlDt/WqwmvmAGJCP6HPUJDauXulY12fTTANNsGQ+qZ+Wa90vF1Mx/DM0LLNo0Sa0leuqJiu53esZOm42ToFtsxfia9l53Xw43m2fbtNW9I41d2ZXLb7kRFtxjWbACnb/ddIsRnD3igJ63WlVKo0MkyaBcAyf6OzXBj+SiXLe4YUp4xDBzpjsMz6fNQ2g6jGNn5AryqaCLHFP6jLPJrWx8QsMZ+ZF8xrnQs/8xnjZ3d9TqvJS2PxfVrmb2eHFJrO8yscXfftxdmc0WBff2X358GUTFcY0yFsx0s7xWwdf9XXB2zi/krOkzxHnpN7knDa3JPnA3vRb3OF9ubrcs9X2u9nH/eLryfe+/B9ky++fc4H9rF9u19VOpTuB+qZ4oz4+IPqav89/7P/cf4CmBAB6m6dgGwAAAAASUVORK5CYII="></div><span>Escaneie pra falar no WhatsApp</span></div>
+            </div>
+            <p>(12) 3204-4300 · a NECSObr também te chama na segunda.</p>
+            <div class="row" style="margin-top:10px"><button class="ghost" id="doneBtn" type="button">Concluir</button></div>
           </div>
           <div class="slogan" style="margin-top:12px">necsobr.com.br · @necsobr · (12) 3204-4300</div>
         </div>
@@ -452,7 +467,7 @@ function endScreen(){
   $("kYou").textContent=S.served;$("kLost").textContent=fmt(S.money);$("kNecso").textContent=S.necso;
   const r=getRank();const pos=r.findIndex(x=>x.name===S.player&&x.score===S.score)+1;
   $("rankMsg").textContent=pos>0&&pos<=3?`${S.player}, você está em ${pos}º no ranking. Passa no balcão e pega seu brinde.`:`${S.player}, você fez ${S.score} pontos.`;
-  $("endA").hidden=false;$("endB").hidden=true;$("endOv").hidden=false;idle(90000);
+  $("endA").hidden=false;$("endB").hidden=true;$("endC").hidden=true;$("endOv").hidden=false;idle(90000);
 }
 // Volta pro modo atração se ninguém mexer na tela de resultado
 let idleT=null;function idle(ms){clearTimeout(idleT);idleT=setTimeout(attract,ms)}
@@ -480,7 +495,10 @@ function toast(t){const d=document.createElement("div");d.className="toast";d.te
 $("leadBtn").onclick=()=>{const co=$("leadCompany").value.trim(),ph=$("leadPhone").value.trim();if(!ph){$("leadPhone").focus();return}
   const lead={name:S.player,company:co,phone:ph,score:S.score,lost:S.money,estimate:Math.round(calc()),at:new Date().toISOString()};const l=LS("fz_leads")||[];l.push(lead);LS("fz_leads",l);
   if(API)fetch(api("/api/leads"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lead)}).catch(()=>{});
-  $("leadCompany").value="";$("leadPhone").value="";toast("Recebido! A NECSObr fala com você na segunda.");setTimeout(attract,1800)};
+  const msg=`Olá! Joguei o Fila Zero no estande da NECSObr na CONSTRUVALE e quero o diagnóstico gratuito.${co?" Empresa: "+co+".":""} No jogo perdi ${fmt(S.money)}; a estimativa da minha empresa deu ${fmt(lead.estimate)}/mês.`;
+  $("waLink").href="https://wa.me/551232044300?text="+encodeURIComponent(msg);
+  $("leadCompany").value="";$("leadPhone").value="";$("endB").hidden=true;$("endC").hidden=false;idle(90000)};
+$("doneBtn").onclick=attract;
 $("exportBtn").onclick=()=>{if(API){location.href=api("/api/leads.csv");return}const l=LS("fz_leads")||[];const csv="nome;empresa;whatsapp;pontos;perdido;estimativa;data\n"+l.map(x=>[x.name,x.company,x.phone,x.score,x.lost,x.estimate||"",x.at].join(";")).join("\n");
   navigator.clipboard.writeText(csv).then(()=>toast(`${l.length} lead(s) copiados`)).catch(()=>{const ta=document.createElement("textarea");ta.value=csv;document.body.appendChild(ta);ta.select();toast("Selecione e copie");setTimeout(()=>ta.remove(),4000)})};
 $("startBtn").onclick=start;$("tutNext").onclick=()=>tutStep<2?showTut(tutStep+1):play();$("tutSkip").onclick=play;
