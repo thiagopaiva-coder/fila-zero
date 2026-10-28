@@ -36,6 +36,7 @@ Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12)
 - Mensagens dos clientes e respostas: array `MSGS` (texto, [3 opções], índice da correta).
 - Nomes dos clientes: `CLIENTS`. Valores em jogo: `TICKETS`.
 - Dificuldade: `spawnEvery` (intervalo inicial, ms), fator `0.9` de aceleração, `patience` (ms).
+- Página pública ↔ servidor: `public/config.js` define `window.FZ_API_BASE` (endereço público do servidor, ex. túnel ngrok). Com ele, quem joga pelo celular também gera card no funil; sem ele, só o caminho do WhatsApp. Em endereço local o front ignora e usa a própria origem.
 - QR "Jogue no seu celular": embutido (`QR_DATA`) aponta pro GitHub Pages. Em servidor próprio, `GET /api/config` devolve `PUBLIC_URL` do `.env` e o front redesenha o QR; endereço local sem PUBLIC_URL → mantém o link público.
 - Frases do modo atração: `HOOKS`. Fórmula da calculadora: `calc()` (contatos × 22 dias × % sem resposta × 10% conversão × ticket).
 - Duração do modo NECSO: `setTimeout(endScreen, 11000)`.

@@ -21,7 +21,7 @@ fs.mkdirSync(DATA, { recursive: true });
 const file = n => path.join(DATA, n + ".json");
 const load = n => { try { return JSON.parse(fs.readFileSync(file(n), "utf8")); } catch { return []; } };
 const save = (n, v) => fs.writeFileSync(file(n), JSON.stringify(v, null, 2));
-const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,POST,OPTIONS", "Access-Control-Allow-Headers": "Content-Type" };
+const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,POST,OPTIONS", "Access-Control-Allow-Headers": "Content-Type, ngrok-skip-browser-warning" };
 const json = (res, code, body) => { res.writeHead(code, { "Content-Type": "application/json; charset=utf-8", ...CORS }); res.end(JSON.stringify(body)); };
 const body = req => new Promise(r => { let s = ""; req.on("data", c => s += c); req.on("end", () => { try { r(JSON.parse(s || "{}")); } catch { r({}); } }); });
 const clean = (v, n) => String(v ?? "").slice(0, n);
@@ -137,6 +137,6 @@ http.createServer(async (req, res) => {
 
   const f = path.join(PUB, url.pathname === "/" ? "index.html" : url.pathname);
   if (!f.startsWith(PUB) || !fs.existsSync(f)) { res.writeHead(404); return res.end("404"); }
-  res.writeHead(200, { "Content-Type": f.endsWith(".html") ? "text/html; charset=utf-8" : f.endsWith(".png") ? "image/png" : "application/octet-stream" });
+  res.writeHead(200, { "Content-Type": f.endsWith(".html") ? "text/html; charset=utf-8" : f.endsWith(".png") ? "image/png" : f.endsWith(".js") ? "application/javascript; charset=utf-8" : "application/octet-stream" });
   fs.createReadStream(f).pipe(res);
 }).listen(PORT, () => console.log(`Fila Zero em http://localhost:${PORT} · integração: ${NECSO_ID ? "NECSO Atende" : WEBHOOK ? "webhook" : "desligada"}`));
