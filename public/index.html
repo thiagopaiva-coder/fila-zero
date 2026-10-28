@@ -467,18 +467,21 @@ $("backBtn").onclick=()=>{$("endB").hidden=true;$("endA").hidden=false};
 
 // ---------- Ranking & leads ----------
 const LS=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||"[]");localStorage.setItem(k,JSON.stringify(v))}catch(e){return[]}};
-const API=location.protocol.startsWith("http");
+// Servidor do ranking/leads. Vazio = mesmo endereço da página. Ex.: "https://fila-zero.up.railway.app"
+const API_BASE="";
+const API=location.protocol.startsWith("http")&&(API_BASE||!/github\.io$|claude\.ai$/.test(location.hostname));
+const api=p=>API_BASE+p;
 function getRank(){return LS("fz_rank")||[]}
-async function syncRank(){if(!API)return;try{const r=await (await fetch("/api/rank")).json();LS("fz_rank",r);drawRank()}catch(e){}}
+async function syncRank(){if(!API)return;try{const r=await (await fetch(api("/api/rank"))).json();LS("fz_rank",r);drawRank()}catch(e){}}
 function saveRank(){const r=getRank();r.push({name:S.player,score:S.score,served:S.served,at:Date.now()});r.sort((a,b)=>b.score-a.score);LS("fz_rank",r.slice(0,10));drawRank();
-  if(API)fetch("/api/rank",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:S.player,score:S.score,served:S.served})}).then(r=>r.json()).then(r=>{LS("fz_rank",r);drawRank()}).catch(()=>{})}
+  if(API)fetch(api("/api/rank"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:S.player,score:S.score,served:S.served})}).then(r=>r.json()).then(r=>{LS("fz_rank",r);drawRank()}).catch(()=>{})}
 function drawRank(){const r=getRank();const h=r.length?r.map((x,i)=>`<div><span>${i+1}º ${x.name}</span><b>${x.score}</b></div>`).join(""):"<div><span>Seja o primeiro</span><b>—</b></div>";$("rank").innerHTML=h;$("mrank").innerHTML=r.slice(0,5).map((x,i)=>`<div><span>${i+1}º ${x.name}</span><b>${x.score}</b></div>`).join("")}
 function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2500)}
 $("leadBtn").onclick=()=>{const co=$("leadCompany").value.trim(),ph=$("leadPhone").value.trim();if(!ph){$("leadPhone").focus();return}
   const lead={name:S.player,company:co,phone:ph,score:S.score,lost:S.money,estimate:Math.round(calc()),at:new Date().toISOString()};const l=LS("fz_leads")||[];l.push(lead);LS("fz_leads",l);
-  if(API)fetch("/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lead)}).catch(()=>{});
+  if(API)fetch(api("/api/leads"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lead)}).catch(()=>{});
   $("leadCompany").value="";$("leadPhone").value="";toast("Recebido! A NECSObr fala com você na segunda.");setTimeout(attract,1800)};
-$("exportBtn").onclick=()=>{if(API){location.href="/api/leads.csv";return}const l=LS("fz_leads")||[];const csv="nome;empresa;whatsapp;pontos;perdido;estimativa;data\n"+l.map(x=>[x.name,x.company,x.phone,x.score,x.lost,x.estimate||"",x.at].join(";")).join("\n");
+$("exportBtn").onclick=()=>{if(API){location.href=api("/api/leads.csv");return}const l=LS("fz_leads")||[];const csv="nome;empresa;whatsapp;pontos;perdido;estimativa;data\n"+l.map(x=>[x.name,x.company,x.phone,x.score,x.lost,x.estimate||"",x.at].join(";")).join("\n");
   navigator.clipboard.writeText(csv).then(()=>toast(`${l.length} lead(s) copiados`)).catch(()=>{const ta=document.createElement("textarea");ta.value=csv;document.body.appendChild(ta);ta.select();toast("Selecione e copie");setTimeout(()=>ta.remove(),4000)})};
 $("startBtn").onclick=start;$("tutNext").onclick=()=>tutStep<2?showTut(tutStep+1):play();$("tutSkip").onclick=play;
 $("player").addEventListener("keydown",e=>{if(e.key==="Enter")necsoMode()});
