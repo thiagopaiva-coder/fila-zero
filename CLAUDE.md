@@ -25,7 +25,7 @@ Fontes: Hammersmith One (necsobr) e Barlow Semi Condensed (corpo; o slogan ofici
 Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12) 3204-4300 (telefone). WhatsApp conectado ao NECSO Atende: (12) 2018-0667 (usado no link/QR pós-lead).
 
 ## Fluxo no estande
-1. **Entrada** (`attract()`, classe `.app.intro`): tela limpa e parada — símbolo, "Fila Zero", frase fixa "Sua empresa perde clientes quando ninguém atende rápido.", botão "TOQUE PARA ATENDER" e QR. Sem fila no fundo, sem placar, sem lateral.
+1. **Entrada** (`attract()`, classe `.app.intro`, bloco `.hero`): tela parada, sem rolagem — à esquerda marca, "Fila Zero", frase fixa "Sua empresa perde clientes quando ninguém atende rápido.", botão "TOQUE PARA ATENDER" e QR; à direita um celular ilustrativo (`.phone`) com três clientes esperando; fundo com grade de planta. No celular vira uma coluna e o QR some. HUD e lateral ficam ocultos na entrada.
 2. **Tutorial** (`#tutOv`, 3 passos com bolhas de exemplo): como responder, barra de paciência, 3 vidas. "Pular" vai direto; "Jogar de novo" não repete o tutorial.
 3. **Jogo** até perder 3 clientes.
 4. **"A fila venceu"** → "Ligar NECSO Atende" → transição animada `#switchOv` (~4 s: símbolo pulsando, canais conectando, "Nenhum cliente sem resposta.") → modo automático com as respostas certas em bolhas azuis (14 s).
