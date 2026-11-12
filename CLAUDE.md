@@ -26,10 +26,10 @@ Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12)
 
 ## Fluxo no estande
 1. **Entrada** (`attract()`, classe `.app.intro`, bloco `.hero`): tela parada, sem rolagem — à esquerda marca, "Fila Zero", frase fixa "Sua empresa perde clientes quando ninguém atende rápido.", botão "TOQUE PARA ATENDER" e QR; à direita um celular ilustrativo (`.phone`) com três clientes esperando; fundo com grade de planta. No celular vira uma coluna e o QR some. HUD e lateral ficam ocultos na entrada.
-2. **Treinamento jogável** (`start()`, `S.train`, barra `#coachBar`, destaque `.spot`): o supervisor guia dentro do próprio WhatsApp — (1) primeiro cliente parado até a resposta certa, (2) segundo cliente com a barra de paciência correndo, (3) destaque nos corações e no "perdidos" + botão "Começar pra valer". Nada conta no treino. "Pular treino" e "Jogar de novo" vão direto pra contagem 3-2-1 (`play()`, `#countOv`).
+2. **Treinamento jogável** (`start()`, `S.train`, barra `#coachBar`, destaque `.spot`): o supervisor guia dentro do próprio WhatsApp — (1) primeiro cliente parado até a resposta certa, (2) segundo cliente com a barra de paciência correndo, (3) cartão centralizado na tela "Treino concluído!" (`.coachbar.center`) com destaque nos corações e no "perdidos" + botão "Começar pra valer". Nada conta no treino. "Pular treino" e "Jogar de novo" vão direto pra contagem 3-2-1 (`play()`, `#countOv`).
 3. **Jogo** até perder 3 clientes.
-4. **"A fila venceu"** → "Ligar NECSO Atende" → transição animada `#switchOv` (~4 s: símbolo pulsando, canais conectando, "Nenhum cliente sem resposta.") → modo automático com as respostas certas em bolhas azuis (14 s).
-5. **Resultado**: "Jogar de novo" (público geral) ou "Quanto a minha empresa perde?" (interessados) → calculadora de 3 sliders → lead → tela com botão/QR do WhatsApp da NECSObr (mensagem pronta com os números do jogo).
+4. **"A fila venceu"** → "Ligar NECSO Atende" → transição animada `#switchOv` (~4 s: símbolo pulsando, canais conectando, "Nenhum cliente sem resposta.") → modo automático com as respostas certas em bolhas azuis. **Regra: o NECSO sempre atende mais clientes e garante mais dinheiro que o jogador** — meta `target` = max(10, 1,5× atendidos + 5), ritmo ajustado pra ~13 s, e só encerra (`tryEnd`) quando `S.necso ≥ target` e `S.necsoMoney ≥ S.won×1,3 + 3000`.
+5. **Resultado**: comparação lado a lado Você × NECSO Atende (clientes atendidos, vendas garantidas, perdidos) e a diferença em reais. "Jogar de novo" (público geral) ou "Quanto a minha empresa perde?" (interessados) → calculadora de 3 sliders → lead → tela com botão/QR do WhatsApp da NECSObr (mensagem pronta com os números do jogo).
 6. Sem interação por 90 s nas telas finais → volta ao modo atração.
 
 ## Onde mexer
@@ -38,6 +38,7 @@ Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12)
 - Dificuldade: `spawnEvery` (intervalo inicial, ms), fator `0.9` de aceleração, `patience` (ms).
 - Página pública ↔ servidor: `public/config.js` define `window.FZ_API_BASE` (endereço público do servidor, ex. túnel ngrok). Com ele, quem joga pelo celular também gera card no funil; sem ele, só o caminho do WhatsApp. Em endereço local o front ignora e usa a própria origem.
 - QR "Jogue no seu celular": embutido (`QR_DATA`) aponta pro GitHub Pages. Em servidor próprio, `GET /api/config` devolve `PUBLIC_URL` do `.env` e o front redesenha o QR; endereço local sem PUBLIC_URL → mantém o link público.
+- Botão "↺ Início" no topo (`#homeBtn` → `attract()`) volta pra tela inicial a qualquer momento.
 - **Sem ranking**: removido do front a pedido (as rotas `/api/rank` do servidor ficaram, sem uso). Nome, empresa e WhatsApp são pedidos só no formulário do diagnóstico.
 - Fórmula da calculadora: `calc()` (contatos × 22 dias × % sem resposta × 10% conversão × ticket).
-- Duração do modo NECSO: `setTimeout(endScreen, 11000)`.
+- Duração do modo NECSO: mínimo de 13 s (`after(13000,tryEnd)` em `necsoMode`).
