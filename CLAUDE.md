@@ -25,10 +25,10 @@ Fontes: Hammersmith One (necsobr) e Barlow Semi Condensed (corpo; o slogan ofici
 Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12) 3204-4300 (telefone). WhatsApp conectado ao NECSO Atende: (12) 2018-0667 (usado no link/QR pós-lead).
 
 ## Fluxo no estande
-1. **Modo atração** (ninguém jogando): fila roda sozinha, frases de impacto alternam (`HOOKS`), botão "TOQUE PARA ATENDER".
+1. **Entrada** (`attract()`, classe `.app.intro`): tela limpa e parada — símbolo, "Fila Zero", frase fixa "Sua empresa perde clientes quando ninguém atende rápido.", botão "TOQUE PARA ATENDER" e QR. Sem fila no fundo, sem placar, sem lateral.
 2. **Tutorial** (`#tutOv`, 3 passos com bolhas de exemplo): como responder, barra de paciência, 3 vidas. "Pular" vai direto; "Jogar de novo" não repete o tutorial.
 3. **Jogo** até perder 3 clientes.
-4. **"A fila venceu"**: pede o nome (só aqui, pra não travar quem está passando) → "Ligar NECSO Atende" → transição animada `#switchOv` (~4 s: símbolo pulsando, canais conectando, "Nenhum cliente sem resposta.") → modo automático com as respostas certas em bolhas azuis (14 s).
+4. **"A fila venceu"** → "Ligar NECSO Atende" → transição animada `#switchOv` (~4 s: símbolo pulsando, canais conectando, "Nenhum cliente sem resposta.") → modo automático com as respostas certas em bolhas azuis (14 s).
 5. **Resultado**: "Jogar de novo" (público geral) ou "Quanto a minha empresa perde?" (interessados) → calculadora de 3 sliders → lead → tela com botão/QR do WhatsApp da NECSObr (mensagem pronta com os números do jogo).
 6. Sem interação por 90 s nas telas finais → volta ao modo atração.
 
@@ -38,5 +38,6 @@ Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12)
 - Dificuldade: `spawnEvery` (intervalo inicial, ms), fator `0.9` de aceleração, `patience` (ms).
 - Página pública ↔ servidor: `public/config.js` define `window.FZ_API_BASE` (endereço público do servidor, ex. túnel ngrok). Com ele, quem joga pelo celular também gera card no funil; sem ele, só o caminho do WhatsApp. Em endereço local o front ignora e usa a própria origem.
 - QR "Jogue no seu celular": embutido (`QR_DATA`) aponta pro GitHub Pages. Em servidor próprio, `GET /api/config` devolve `PUBLIC_URL` do `.env` e o front redesenha o QR; endereço local sem PUBLIC_URL → mantém o link público.
-- Frases do modo atração: `HOOKS`. Fórmula da calculadora: `calc()` (contatos × 22 dias × % sem resposta × 10% conversão × ticket).
+- **Sem ranking**: removido do front a pedido (as rotas `/api/rank` do servidor ficaram, sem uso). Nome, empresa e WhatsApp são pedidos só no formulário do diagnóstico.
+- Fórmula da calculadora: `calc()` (contatos × 22 dias × % sem resposta × 10% conversão × ticket).
 - Duração do modo NECSO: `setTimeout(endScreen, 11000)`.
