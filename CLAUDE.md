@@ -26,7 +26,7 @@ Slogan: "Conexão que faz sentido." Contatos: necsobr.com.br · @necsobr · (12)
 
 ## Fluxo no estande
 1. **Entrada** (`attract()`, classe `.app.intro`, bloco `.hero`): tela parada, sem rolagem — à esquerda marca, "Fila Zero", frase fixa "Sua empresa perde clientes quando ninguém atende rápido.", botão "TOQUE PARA ATENDER" e QR; à direita um celular ilustrativo (`.phone`) com três clientes esperando; fundo com grade de planta. No celular vira uma coluna e o QR some. HUD e lateral ficam ocultos na entrada.
-2. **Tutorial** (`#tutOv`, 3 passos com bolhas de exemplo): como responder, barra de paciência, 3 vidas. "Pular" vai direto; "Jogar de novo" não repete o tutorial.
+2. **Treinamento jogável** (`start()`, `S.train`, barra `#coachBar`, destaque `.spot`): o supervisor guia dentro do próprio WhatsApp — (1) primeiro cliente parado até a resposta certa, (2) segundo cliente com a barra de paciência correndo, (3) destaque nos corações e no "perdidos" + botão "Começar pra valer". Nada conta no treino. "Pular treino" e "Jogar de novo" vão direto pra contagem 3-2-1 (`play()`, `#countOv`).
 3. **Jogo** até perder 3 clientes.
 4. **"A fila venceu"** → "Ligar NECSO Atende" → transição animada `#switchOv` (~4 s: símbolo pulsando, canais conectando, "Nenhum cliente sem resposta.") → modo automático com as respostas certas em bolhas azuis (14 s).
 5. **Resultado**: "Jogar de novo" (público geral) ou "Quanto a minha empresa perde?" (interessados) → calculadora de 3 sliders → lead → tela com botão/QR do WhatsApp da NECSObr (mensagem pronta com os números do jogo).
