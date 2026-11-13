@@ -390,7 +390,7 @@ input{font:inherit}
       <h3>Ao vivo</h3>
       <div class="feed" id="feed"></div>
       <div class="qr" id="qrBox"><div class="qrimg qrslot"></div><div><b>Jogue no seu celular</b><br>aponte a câmera e atenda a fila</div></div>
-      <button class="ghost" id="exportBtn" type="button">Copiar leads (equipe)</button>
+      <button class="ghost" id="exportBtn" type="button">Contatos (equipe)</button>
     </aside>
   </div>
 </div>
@@ -581,7 +581,7 @@ $("leadBtn").onclick=()=>{const nm=$("leadName").value.trim(),co=$("leadCompany"
   $("waLink").href="https://wa.me/551220180667?text="+encodeURIComponent(msg);
   $("leadName").value="";$("leadCompany").value="";$("leadPhone").value="";$("endB").hidden=true;$("endC").hidden=false;idle(90000)};
 $("doneBtn").onclick=attract;
-$("exportBtn").onclick=()=>{if(API){location.href=api("/api/leads.csv");return}const l=LS("fz_leads")||[];const csv="nome;empresa;whatsapp;pontos;perdido;estimativa;data\n"+l.map(x=>[x.name,x.company,x.phone,x.score,x.lost,x.estimate||"",x.at].join(";")).join("\n");
+$("exportBtn").onclick=()=>{if(API){location.href="contatos.html";return}const l=LS("fz_leads")||[];const csv="nome;empresa;whatsapp;pontos;perdido;estimativa;data\n"+l.map(x=>[x.name,x.company,x.phone,x.score,x.lost,x.estimate||"",x.at].join(";")).join("\n");
   navigator.clipboard.writeText(csv).then(()=>toast(`${l.length} lead(s) copiados`)).catch(()=>{const ta=document.createElement("textarea");ta.value=csv;document.body.appendChild(ta);ta.select();toast("Selecione e copie");setTimeout(()=>ta.remove(),4000)})};
 $("startBtn").onclick=start;$("homeBtn").onclick=attract;$("coachGo").onclick=play;$("coachSkip").onclick=play;
 

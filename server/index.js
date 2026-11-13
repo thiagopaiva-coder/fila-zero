@@ -21,7 +21,7 @@ fs.mkdirSync(DATA, { recursive: true });
 const file = n => path.join(DATA, n + ".json");
 const load = n => { try { return JSON.parse(fs.readFileSync(file(n), "utf8")); } catch { return []; } };
 const save = (n, v) => fs.writeFileSync(file(n), JSON.stringify(v, null, 2));
-const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,POST,OPTIONS", "Access-Control-Allow-Headers": "Content-Type, ngrok-skip-browser-warning" };
+const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET,POST,DELETE,OPTIONS", "Access-Control-Allow-Headers": "Content-Type, ngrok-skip-browser-warning" };
 const json = (res, code, body) => { res.writeHead(code, { "Content-Type": "application/json; charset=utf-8", ...CORS }); res.end(JSON.stringify(body)); };
 const body = req => new Promise(r => { let s = ""; req.on("data", c => s += c); req.on("end", () => { try { r(JSON.parse(s || "{}")); } catch { r({}); } }); });
 const clean = (v, n) => String(v ?? "").slice(0, n);
@@ -115,11 +115,24 @@ http.createServer(async (req, res) => {
     console.log(`lead ${lead.phone} (${lead.company}) → ${lead.forwarded}`);
     return json(res, 200, { ok: true, total: l.length });
   }
+  // ---- Banco de contatos (painel public/contatos.html) ----
+  if (url.pathname === "/api/leads" && req.method === "GET") {
+    if (!admin) return json(res, 401, { erro: "senha incorreta" });
+    return json(res, 200, load("leads").slice().reverse());
+  }
+  if (url.pathname === "/api/leads" && req.method === "DELETE") {   // remove um contato (ex.: testes) pelo campo "at"
+    if (!admin) return json(res, 401, { erro: "senha incorreta" });
+    const at = url.searchParams.get("at"); const l = load("leads"); const rest = l.filter(x => x.at !== at);
+    if (rest.length === l.length) return json(res, 404, { erro: "contato não encontrado" });
+    fs.copyFileSync(file("leads"), path.join(DATA, "leads.backup.json")); save("leads", rest);
+    return json(res, 200, { ok: true, total: rest.length });
+  }
   if (url.pathname === "/api/leads.csv") {
-    if (!admin) return json(res, 401, { erro: "token" });
-    const l = load("leads");
-    res.writeHead(200, { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": "attachment; filename=leads-fila-zero.csv" });
-    return res.end("nome;empresa;whatsapp;pontos;perdido;estimativa;enviado;data\n" + l.map(x => [x.name, x.company, x.phone, x.score, x.lost, x.estimate, x.forwarded, x.at].join(";")).join("\n"));
+    if (!admin) return json(res, 401, { erro: "senha incorreta" });
+    const l = load("leads"); const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    res.writeHead(200, { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": "attachment; filename=contatos-fila-zero.csv", ...CORS });
+    return res.end("\uFEFFnome;empresa;whatsapp;pontos;perdido_no_jogo;estimativa_mensal;enviado_ao_crm;data\n" +
+      l.map(x => [x.name, x.company, x.phone, x.score, x.lost, x.estimate, x.forwarded, x.at].map(q).join(";")).join("\n"));
   }
   if (url.pathname === "/api/resend" && req.method === "POST") {   // reenvia leads que não chegaram na plataforma
     if (!admin) return json(res, 401, { erro: "token" });

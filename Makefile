@@ -35,3 +35,6 @@ test-lead:  ## envia um lead de teste pra integração (use seu próprio WhatsAp
 
 crm:        ## mostra o funil e a etapa que o servidor vai usar
 	curl -s "http://localhost:8080/api/crm?token=$(ADMIN_TOKEN)"
+
+contatos:   ## mostra o endereço do painel de contatos
+	@echo "Painel: http://localhost:8080/contatos.html  (senha = ADMIN_TOKEN do .env)"

@@ -12,6 +12,7 @@ e deixa o contato para o diagnóstico gratuito.
   **Integração NECSO Atende** (`forwardNecso`): cada lead vira contato (tags Fila Zero/CONSTRUVALE) + card no funil do CRM
   (`NECSO_FUNNEL_NAME`, padrão "Comercial", primeira etapa) + comentário com os dados do jogo. Credenciais em `.env` (ver `.env.example`).
   O `clientSecret` nunca vai pro front: a página pública (GitHub Pages) só tem o caminho do WhatsApp.
+- `public/contatos.html` — **painel de contatos da equipe** (banco de dados dos leads): pede a senha (`ADMIN_TOKEN`), lista tudo de `data/leads.json` com busca, resumo, situação no CRM, link de WhatsApp, aviso de telefone repetido, excluir (dois toques; gera `leads.backup.json`), reenviar pendentes e baixar planilha (CSV com BOM, abre no Excel). Rotas: `GET /api/leads?token=`, `DELETE /api/leads?token=&at=`.
 - `data/` — `rank.json` e `leads.json` (montado como volume no Docker; não versionar).
 
 ## Comandos
